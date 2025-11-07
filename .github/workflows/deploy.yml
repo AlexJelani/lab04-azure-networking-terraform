@@ -1,0 +1,34 @@
+name: Deploy Lab 04 with Terraform
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  terraform:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: .
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.9.0
+
+      - name: Terraform Init
+        run: terraform init
+
+      - name: Terraform Plan (what-if)
+        run: terraform plan -out=tfplan
+
+      - name: Terraform Apply
+        run: terraform apply -auto-approve tfplan
+
+      - name: Verify
+        run: |
+          echo "Deployed! Check Azure Portal → az104-rg4"
