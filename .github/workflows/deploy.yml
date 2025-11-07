@@ -1,8 +1,17 @@
 name: Deploy Lab 04 with Terraform
 
 on:
-  push:
-    branches: [ main ]
+  workflow_dispatch:
+    inputs:
+      action:
+        description: 'Action to perform'
+        required: true
+        default: 'plan'
+        type: choice
+        options:
+        - plan
+        - apply
+        - destroy
 
 jobs:
   terraform:
@@ -23,12 +32,19 @@ jobs:
       - name: Terraform Init
         run: terraform init
 
-      - name: Terraform Plan (what-if)
+      - name: Terraform Plan
+        if: github.event.inputs.action == 'plan' || github.event.inputs.action == 'apply'
         run: terraform plan -out=tfplan
 
       - name: Terraform Apply
+        if: github.event.inputs.action == 'apply'
         run: terraform apply -auto-approve tfplan
+
+      - name: Terraform Destroy
+        if: github.event.inputs.action == 'destroy'
+        run: terraform destroy -auto-approve
 
       - name: Verify
         run: |
-          echo "Deployed! Check Azure Portal → az104-rg4"
+          echo "Action completed: ${{ github.event.inputs.action }}"
+          echo "Check Azure Portal → az104-rg4"
