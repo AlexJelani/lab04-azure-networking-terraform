@@ -1,8 +1,6 @@
 name: Deploy Lab 04 with Terraform
 
 on:
-  push:
-    branches: [ main ]
   workflow_dispatch:
     inputs:
       action:
