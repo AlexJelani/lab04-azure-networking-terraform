@@ -15,11 +15,20 @@ terraform {
       version = "~> 3.0"
     }
   }
-  # Optional: store state in Azure Storage (add later)
+  backend "azurerm" {
+    resource_group_name  = "terraform-state-rg"
+    storage_account_name = "tfstateeab4a2d7"
+    container_name       = "tfstate"
+    key                  = "lab04.terraform.tfstate"
+  }
 }
 
 provider "azurerm" {
-  features {}
+  features {
+    resource_group {
+      prevent_deletion_if_contains_resources = false
+    }
+  }
 }
 
 # Generate random suffix for DNS zone
