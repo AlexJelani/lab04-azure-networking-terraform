@@ -36,6 +36,16 @@ jobs:
         with:
           terraform_version: 1.9.0
 
+      - name: Debug Environment Variables
+        run: |
+          echo "ARM_CLIENT_ID length: ${#ARM_CLIENT_ID}"
+          echo "ARM_CLIENT_SECRET length: ${#ARM_CLIENT_SECRET}"
+          echo "ARM_SUBSCRIPTION_ID length: ${#ARM_SUBSCRIPTION_ID}"
+          echo "ARM_TENANT_ID length: ${#ARM_TENANT_ID}"
+          echo "Checking for newlines..."
+          echo "$ARM_SUBSCRIPTION_ID" | od -c
+          echo "$ARM_TENANT_ID" | od -c
+
       - name: Terraform Init
         run: terraform init
 
